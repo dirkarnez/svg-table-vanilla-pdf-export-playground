@@ -3,9 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+          background: #555;
+        }
+        
+        .content {
+          max-width: 500px;
+          margin: auto;
+          background: white;
+          padding: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div id="container"></div>
+    <div class="content">
+        <h1>This page is horizontally centered on screens that are wider than 500 pixels.</h1>
+        <h1>Resize the browser window to see the effect.</h1>
+        <p>This page is always centered on screens that are wider than 500px. On screens that are less than 
+        500px wide, it will span the whole of the page.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <p>Content inside this container is centered horizontally.</p>
+        <iframe id="myiFrame" style="width: 100%;border: none;height: 800px;">
+            <p>您的浏览器不支持  iframe 标签。</p>
+          </iframe>
+      </div>
+      
+   
     <script type="module">
         import SVGTable, {
             createVanillaElement,
@@ -14,6 +45,7 @@
 
         // this props will have an extensive amount of attributes that you can use for customization
         const adjustedText = props => {
+            debugger;
             return createVanillaElement(
                 'g',
                 {},
@@ -26,18 +58,58 @@
             );
         };
 
-        const tableProps = {
-            rows: [
-                ['Header 1', 'Header 2'],
-                [{ content: adjustedText }, 'Cell'],
-            ],
+
+
+        const BasicWithProps = ({ width, height }) => {
+            const tableProps = {
+                rows: [
+                    ['Header 1', 'Header 2'],
+                    [{ content: props => {
+                        const a = adjustedText(props);
+                        debugger;
+                        return a;
+                    } }, 'Cell'],
+                ],
+            };
+
+            return SVGTable({ ...tableProps, width, height, standalone: true });
         };
 
-        const BasicWithProps = ({ width = 500 }) => {
-            return SVGTable({ ...tableProps, width });
-        };
+        const a = BasicWithProps({width: 297, height: 209});
 
-        document.getElementById("container").innerHTML = BasicWithProps({width: 500});
+        document.getElementById("myiFrame").srcdoc = `
+        <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link type="text/css" href="/main.css" media="all" rel="stylesheet" /> -->
+    <!-- <link type="text/css" href="./print.css" media="all" rel="stylesheet" />-->
+    <style>
+@media print{@page {size: landscape}}
+        </style>
+</head>
+
+<body>
+${a}
+
+</body>
+
+</html>
+`;
+
+        
+
+        function printIframe ( ) {
+            var iframe = document.getElementById("myiFrame");
+            var iframeWindow = iframe.contentWindow;
+            iframeWindow.print();
+        }
+        printIframe();
+
     </script>
 </body>
 </html>
